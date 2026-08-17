@@ -6,7 +6,7 @@ suchen, Details einsehen, Aufträge ausdrucken sowie Teilebestand,
 Reifen-/Radeinlagerungen und Ersatzfahrzeug-Belegungen durchsuchen.
 Mandantenfähig: mehrere Betriebe/Niederlassungen werden getrennt verwaltet.
 
-Technischer Hintergrund und Implementierungsdetails: siehe `UMSETZUNG.md`.
+Technischer Hintergrund, Architekturentscheidungen und bekannte Gotchas: siehe `ARCHITECTURE.md`.
 
 ## Voraussetzungen
 
