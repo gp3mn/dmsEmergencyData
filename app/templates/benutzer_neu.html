@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Neuer Benutzer – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Neuer Benutzer</h1>
+
+    <form method="post" class="card">
+        {% if error %}
+            <div class="error-box">{{ error }}</div>
+        {% endif %}
+        <div class="feld">
+            <label for="benutzername">Benutzername</label>
+            <input type="text" id="benutzername" name="benutzername" value="{{ form.benutzername or '' }}" required autofocus>
+        </div>
+        <div class="feld">
+            <label for="passwort">Passwort</label>
+            <input type="password" id="passwort" name="passwort" required>
+        </div>
+        <div class="feld">
+            <label for="rolle">Rolle</label>
+            <select id="rolle" name="rolle">
+                <option value="standard" {% if form.rolle == "standard" %}selected{% endif %}>Standard (fest an einen Betrieb gebunden)</option>
+                <option value="erweitert" {% if form.rolle == "erweitert" %}selected{% endif %}>Erweitert (kann Betrieb wechseln)</option>
+                <option value="admin" {% if form.rolle == "admin" %}selected{% endif %}>Admin (zusaetzlich Benutzerverwaltung)</option>
+            </select>
+        </div>
+        <div class="feld">
+            <label for="betrieb">Betrieb (nur bei Rolle "Standard" erforderlich)</label>
+            <input type="text" id="betrieb" name="betrieb" list="betriebe-liste" value="{{ form.betrieb or '' }}" placeholder="Betriebsnummer">
+            <datalist id="betriebe-liste">
+                {% for b in betriebe %}
+                    <option value="{{ b.betriebsnummer }}">{{ b.firmenname or b.betriebsnummer }}</option>
+                {% endfor %}
+            </datalist>
+        </div>
+        <div class="aktionen">
+            <button type="submit">Anlegen</button>
+            <a class="button secondary" href="{{ url_for('benutzer.liste') }}">Abbrechen</a>
+        </div>
+    </form>
+{% endblock %}

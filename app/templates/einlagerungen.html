@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Einlagerungen – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Einlagerungen</h1>
+
+    <form class="suchformular card" method="get">
+        <div class="feld">
+            <label for="q">Kunde, Kennzeichen, Auftragsnr., Lagerort oder Depot</label>
+            <input type="text" id="q" name="q" value="{{ q }}" autofocus>
+        </div>
+        <div class="feld">
+            <button type="submit">Suchen</button>
+        </div>
+    </form>
+
+    {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Lagerort</th>
+                    <th>Depot</th>
+                    <th>Status</th>
+                    <th>Kunde</th>
+                    <th>Kennzeichen</th>
+                    <th>Modell</th>
+                    <th>Reifen VL/VR/HL/HR</th>
+                    <th>Felgen VL/VR/HL/HR</th>
+                    <th>Auftrag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in results %}
+                    <tr>
+                        <td>{{ e.lagerort or "" }}</td>
+                        <td>{{ e.depotnr or "" }}</td>
+                        <td>{{ e.status or "" }}</td>
+                        <td>{{ e.kundenname1 or "" }}{% if e.kundenname2 %} {{ e.kundenname2 }}{% endif %}</td>
+                        <td>{{ e.amtlkz or "" }}</td>
+                        <td>{{ e.modellbezeichnung or "" }}</td>
+                        <td>{{ e.reifen_vl or "" }} / {{ e.reifen_vr or "" }} / {{ e.reifen_hl or "" }} / {{ e.reifen_hr or "" }}</td>
+                        <td>{{ e.felge_vl or "" }} / {{ e.felge_vr or "" }} / {{ e.felge_hl or "" }} / {{ e.felge_hr or "" }}</td>
+                        <td>
+                            {% if e.auftragsnr %}
+                                {% if e.auftrag_vorhanden %}
+                                    <a href="{{ url_for('auftrag.detail', auftragsnr=e.auftragsnr) }}">{{ e.auftragsnr }}</a>
+                                {% else %}
+                                    {{ e.auftragsnr }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="leer-hinweis">
+            {% if q %}Keine Einlagerungen gefunden.{% else %}Keine Einlagerungen fuer diesen Betrieb vorhanden.{% endif %}
+        </p>
+    {% endif %}
+{% endblock %}

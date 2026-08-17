@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Betrieb waehlen – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Betrieb waehlen</h1>
+    {% if not betriebe %}
+        <p class="leer-hinweis">Noch keine Betriebsdaten importiert. Der Import laeuft automatisch im Hintergrund,
+            sobald eine ZIP-Datei im Import-Ordner liegt.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Betrieb</th>
+                    <th>Firma</th>
+                    <th>Standort</th>
+                    <th>Datenstand</th>
+                    <th>Letzter Import</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in betriebe %}
+                    <tr>
+                        <td>{{ b.betriebsnummer }}</td>
+                        <td>{{ b.firmenname or "–" }}</td>
+                        <td>{{ b.name or "–" }}</td>
+                        <td>{{ b.letzter_datenstand.strftime("%d.%m.%Y") if b.letzter_datenstand else "–" }}</td>
+                        <td>{{ b.letzter_import_at.strftime("%d.%m.%Y %H:%M") if b.letzter_import_at else "–" }}</td>
+                        <td><span class="status-badge status-{{ b.letzter_status }}">{{ b.letzter_status }}</span></td>
+                        <td>
+                            <form method="post" action="{{ url_for('betrieb.waehlen', nr=b.betriebsnummer) }}" style="display:inline">
+                                <button type="submit">Auswaehlen</button>
+                            </form>
+                            <a class="button secondary" href="{{ url_for('betrieb.bearbeiten', nr=b.betriebsnummer) }}">Bearbeiten</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

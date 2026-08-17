@@ -1,0 +1,245 @@
+{# Gemeinsamer Dokument-Block, nachgebildet nach dem Original-Auftragsdokument
+   (vorlagen/). Wird sowohl von der Bildschirm-Detailansicht (auftrag_detail.html)
+   als auch von der Druckansicht (auftrag_print.html) eingebunden, damit beide
+   Ansichten identisch aussehen. Erwartet: kopf, positionen, einlagerungen,
+   ersatzfzg, standort. #}
+<div class="doc">
+    <div class="doc-header">
+        <div class="doc-company">{{ standort.firmenname if standort and standort.firmenname else "" }}</div>
+    </div>
+
+    <div class="doc-title-bar">
+        <span>Auftrag</span>
+        <span>Notfall-Datenportal</span>
+    </div>
+
+    <table class="doc-grid">
+        <tr>
+            <th>Auftragsnummer</th>
+            <th>Annahmetermin</th>
+            <th>Fertigstellungstermin</th>
+            <th>Abholtermin</th>
+        </tr>
+        <tr>
+            <td>{{ kopf.auftragsnr }}</td>
+            <td>{{ kopf.annahmedatum.strftime("%d.%m.%Y") if kopf.annahmedatum else "" }} {{ kopf.annahmeuhrzeit or "" }}</td>
+            <td>{{ kopf.fertigstellungsdatum.strftime("%d.%m.%Y") if kopf.fertigstellungsdatum else "" }} {{ kopf.fertigstellungsuhrzeit or "" }}</td>
+            <td>{{ kopf.abholdatum.strftime("%d.%m.%Y") if kopf.abholdatum else "" }} {{ kopf.abholuhrzeit or "" }}</td>
+        </tr>
+    </table>
+
+    <table class="doc-grid">
+        <tr>
+            <th style="width:50%">Auftrag von</th>
+            <th style="width:50%">Auftrag an</th>
+        </tr>
+        <tr>
+            <td>
+                {{ kopf.kundenname or "" }}<br>
+                {{ kopf.adressekunde or "" }}
+            </td>
+            <td>
+                {% if standort and standort.firmenname %}{{ standort.firmenname }}<br>{% endif %}
+                {% if standort and standort.name %}{{ standort.name }}<br>{% endif %}
+                {% if standort and standort.strasse %}{{ standort.strasse }}<br>{% endif %}
+                {% if standort and standort.plz_ort %}{{ standort.plz_ort }}{% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <table class="doc-grid">
+        <tr>
+            <th>Telefon/E-Mail 1</th>
+            <th>Telefon/E-Mail 2</th>
+            <th>Es betreut Sie</th>
+        </tr>
+        <tr>
+            <td>{{ kopf.telefonnr1 or "" }}</td>
+            <td>{{ kopf.telefonnr2 or "" }}</td>
+            <td>{{ kopf.verantwortlsb or "" }}</td>
+        </tr>
+    </table>
+
+    <table class="doc-grid">
+        <tr>
+            <th>Amtl. Kennzeichen</th>
+            <th>Fahrzeug-Ident-Nummer</th>
+            <th>Typ/Modell</th>
+            <th>Auftragsart</th>
+        </tr>
+        <tr>
+            <td>{{ kopf.amtlkz or "" }}</td>
+            <td>{{ kopf.fgstnr or "" }}</td>
+            <td>{{ kopf.marke or "" }} {{ kopf.fahrzeugmodell or "" }}</td>
+            <td>{{ kopf.auftragstyp or "" }}</td>
+        </tr>
+    </table>
+
+    {% if kopf.abholer or kopf.abholbemerkung or kopf.zusteller or kopf.zustellbemerkung %}
+        <div class="doc-section-title">Zusatzinformationen</div>
+        <table class="doc-list">
+            <thead>
+                <tr><th style="width:2rem">Nr.</th><th style="width:8rem">Information</th><th>Beschreibung</th></tr>
+            </thead>
+            <tbody>
+                {% if kopf.abholer or kopf.abholbemerkung %}
+                    <tr>
+                        <td>1</td>
+                        <td>Abholer</td>
+                        <td>{{ kopf.abholer or "" }}
+                            {{ kopf.abholdatum.strftime("%d.%m.%Y") if kopf.abholdatum else "" }} {{ kopf.abholuhrzeit or "" }}
+                            {{ kopf.abholbemerkung or "" }}</td>
+                    </tr>
+                {% endif %}
+                {% if kopf.zusteller or kopf.zustellbemerkung %}
+                    <tr>
+                        <td>2</td>
+                        <td>Zusteller</td>
+                        <td>{{ kopf.zusteller or "" }}
+                            {{ kopf.zustelldatum.strftime("%d.%m.%Y") if kopf.zustelldatum else "" }} {{ kopf.zustelluhrzeit or "" }}
+                            {{ kopf.zustellbemerkung or "" }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <div class="doc-section-title">Auftragspositionen</div>
+    <table class="doc-list">
+        <thead>
+            <tr>
+                <th style="width:2rem">Nr.</th>
+                <th style="width:7rem">Position</th>
+                <th style="width:5rem">ZE/Menge</th>
+                <th>Beschreibung</th>
+                <th style="width:3rem">Mech</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in positionen %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ p.identifier or "" }}</td>
+                    <td>
+                        {%- if p.zeiteinheiten is not none %}{{ p.zeiteinheiten }} ZE
+                        {%- elif p.menge is not none %}{{ p.menge }}
+                        {%- endif -%}
+                    </td>
+                    <td class="doc-beschreibung">{{ p.beschreibung_anzeige }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if einlagerungen %}
+        <div class="doc-section-title">Einlagerung</div>
+        <table class="doc-grid">
+            <tr><th>Lagerort</th><th>Reifen VL/VR/HL/HR</th><th>Felgen VL/VR/HL/HR</th></tr>
+            {% for e in einlagerungen %}
+                <tr>
+                    <td>{{ e.lagerort or "" }} (Depot {{ e.depotnr or "" }})</td>
+                    <td>{{ e.reifen_vl or "" }} / {{ e.reifen_vr or "" }} / {{ e.reifen_hl or "" }} / {{ e.reifen_hr or "" }}</td>
+                    <td>{{ e.felge_vl or "" }} / {{ e.felge_vr or "" }} / {{ e.felge_hl or "" }} / {{ e.felge_hr or "" }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if ersatzfzg %}
+        <div class="doc-section-title">Ersatzfahrzeug</div>
+        <table class="doc-grid">
+            <tr><th>Fahrzeug</th><th>Kategorie</th><th>Gueltig</th></tr>
+            {% for f in ersatzfzg %}
+                <tr>
+                    <td>{{ f.mobilitaetbez or "" }} ({{ f.fzgkennung or "" }})</td>
+                    <td>{{ f.ersatzfzgkategorie or "" }}</td>
+                    <td>{{ f.gueltigab.strftime("%d.%m.%Y %H:%M") if f.gueltigab else "" }} – {{ f.gueltigbis.strftime("%d.%m.%Y %H:%M") if f.gueltigbis else "" }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    <div class="doc-footer-text">
+        <p>
+            Wir bedanken uns für Ihren Auftrag und wünschen Ihnen gute Fahrt. Bei Fragen zu Rechnung
+            oder Fahrzeug rufen Sie uns gerne an.{% if standort and standort.telefon %} Tel.: {{ standort.telefon }}{% endif %}
+        </p>
+
+        <p class="doc-checkboxes">
+            &#9633; Gewährleistung / Kulanz &nbsp;&nbsp; &#9633; Ersatzteilgarantie &nbsp;&nbsp; &#9633; KFZ-Schein
+            &nbsp;&nbsp; &#9633; Serviceplan &nbsp;&nbsp; &#9633; Ersatzteile aufheben &nbsp;&nbsp; &#9633; Leasing
+        </p>
+        <p class="doc-checkboxes">
+            Wertgegenstände &#9633; nein &#9633; ja&nbsp;_______________ &nbsp;&nbsp;
+            &#9633; Fzg ist im Serienzustand &nbsp;&nbsp; &#9633; Fotos
+        </p>
+        <p class="doc-checkboxes">
+            &#9633; Fzg. Waschen &nbsp;&nbsp; &#9633; Waschwasser auffüllen &nbsp;&nbsp;
+            &#9633; Wischblätter vorne ers. &nbsp;&nbsp; &#9633; Wischblätter hinten ers.
+        </p>
+
+        <div class="doc-section-title">Kundenvereinbarung</div>
+        <p class="doc-checkboxes">
+            &#9633; Mietwagen &nbsp;&nbsp; &#9633; Hol-/Bring-/Fahrdienst &nbsp;&nbsp;&nbsp;
+            Flüssigkeitsstände prüfen u. ggf. auffüllen &#9633; Ja &#9633; Nein
+        </p>
+        <p>Die Auftragsbestätigung ist Ausweis für die Rückgabe Ihres Wagens. Verwahren Sie sie gut.</p>
+        <p class="doc-checkboxes">
+            Zahlart: &#9633; Bar &#9633; Überwsg. &#9633; EC/Kreditkarte &#9633; Einzug
+        </p>
+        <p class="doc-signature-line">
+            Voraussichtliche Reparaturkosten ______________ &euro; inkl. MWST
+            &nbsp;&nbsp;&nbsp;&nbsp; Unterschrift des Auftraggebers: ______________________________
+        </p>
+
+        <p class="doc-small">
+            Bitte haben Sie Verständnis, dass wir für in Ihrem Fahrzeug befindliche Gegenstände von Wert
+            keine Haftung übernehmen können. Entfernen Sie deshalb bitte solche Gegenstände aus Ihrem
+            Fahrzeug. Der Auftrag wird unter Anerkennung der in der Reparaturannahme ausliegenden
+            Bedingungen für die Ausführung von Arbeiten an Kraftfahrzeugen, Anhängern, Aggregaten und
+            deren Teilen und für Kostenvoranschläge, erteilt. Für Original-Ersatzteile des Herstellers gelten
+            die in der Reparaturannahme ausgehängten Gewährleistungsbedingungen. Für den Fall, dass eine Kulanz-
+            oder Garantieleistung seitens des Herstellers abgelehnt wird, ist der Auftragnehmer berechtigt,
+            die anfallenden Arbeits- und Materialkosten dem Auftraggeber in Rechnung zu stellen. Eine Kopie
+            des Auftrages wurde ausgehändigt. Erhalt wird mit der Unterschrift bestätigt.
+        </p>
+        <p class="doc-small">
+            Der Auftraggeber bestätigt mit seiner Unterschrift die Erteilung des beschriebenen Auftrages
+            und erklärt ausdrücklich:
+        </p>
+        <ol class="doc-small">
+            <li>Die im Aushang gedruckten Bedingungen für die Ausführ- und Instandsetzungsarbeiten sind
+                Inhalt des Reparaturauftrages und werden zur Kenntnis genommen.</li>
+            <li>Ersetzte Alt-Teile gehen entschädigungslos in das Eigentum des Auftragnehmers über.</li>
+            <li>Schriftliche oder mündliche Nebenabreden werden nicht getroffen.</li>
+            <li>Soweit nicht zwingend gesetzliche Vorschriften entgegenstehen, wird als Gerichtsstand und
+                Erfüllungsort das örtliche zuständige Gericht des Standortes der Werkstätte vereinbart.</li>
+            <li>Zahlbar sofort nach Erhalt der Rechnung und Übernahme des Fahrzeuges ohne jeden Abzug.
+                Die Verzugszinsen betragen 6% über dem Basiszinssatz der EZB, sofern nicht höhere
+                Kreditbeschaffungskosten gegeben sind.</li>
+        </ol>
+        <p class="doc-small">
+            Im Zusammenhang mit der Auftragsbearbeitung und -abwicklung werden personenbezogene Daten von
+            Ihnen verarbeitet. Über die Datenverarbeitung durch Ihren jeweiligen Vertragspartner informiert
+            Sie dieser separat. In einigen Ihren Auftrag betreffenden Arbeitsschritten verarbeitet auch der
+            Fahrzeughersteller personenbezogene Daten (insb. die Fahrzeugidentifikationsnummer) von Ihnen.
+            Detaillierte Informationen zu diesen Datenverarbeitungen in Verantwortung des Fahrzeugherstellers
+            können Sie dessen Datenschutzerklärung für die Inanspruchnahme von Sales- und Serviceleistungen
+            sowie Marketingmaßnahmen entnehmen. Diese händigt Ihnen Ihr Vertragspartner gerne aus oder kann
+            auf der Datenschutz-Webseite des jeweiligen Herstellers abgerufen werden.
+        </p>
+        <p class="doc-small">
+            Zur Erfüllung rechtlicher Verpflichtungen (Durchführungsverordnung (EU) Nr. 2021/392) werden
+            Fahrzeugdaten zu Kraftstoffverbrauch und gefahrenen Kilometern (sog. On-Board Fuel
+            Consumption Monitoring Daten) bei Werkstattbesuchen aus Fahrzeugen mit Verbrennungsmotor
+            (inkl. Plug-In-Hybride) mit Erstzulassungsdatum ab 01.01.2021 ausgelesen und zusammen mit der
+            Fahrzeugidentifikationsnummer an die EU-Kommission übertragen. Die Datenverarbeitung,
+            Übermittlung, Speicherung erfolgt im Rahmen dieser rechtlichen Verpflichtung und kann
+            kundenseitig vor dem Auslesevorgang in der Vertragswerkstatt verweigert werden. Die Daten
+            werden nach spätestens 15 Jahren oder gemäß den gesetzlichen Anforderungen, zum Beispiel
+            sobald der Zweck entfällt, zu dem sie erhoben wurden und sofern der Löschung keine anderen
+            Aufbewahrungspflichten entgegenstehen, gelöscht.
+        </p>
+    </div>
+</div>

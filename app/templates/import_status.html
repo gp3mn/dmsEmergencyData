@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Import-Status – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Import-Status
+        <button id="import-jetzt-button" type="button" class="secondary no-print">Jetzt importieren</button>
+    </h1>
+    {% if not rows %}
+        <p class="leer-hinweis">Noch keine Importe protokolliert.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Betrieb</th>
+                    <th>Datei</th>
+                    <th>Datenstand</th>
+                    <th>Status</th>
+                    <th>Gestartet</th>
+                    <th>Beendet</th>
+                    <th>Ausgeloest durch</th>
+                    <th>Fehler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rows %}
+                    <tr>
+                        <td>{{ r.betrieb or "" }}</td>
+                        <td>{{ r.zip_filename }}</td>
+                        <td>{{ r.datenstand.strftime("%d.%m.%Y") if r.datenstand else "" }}</td>
+                        <td><span class="status-badge status-{{ r.status }}">{{ r.status }}</span></td>
+                        <td>{{ r.started_at.strftime("%d.%m.%Y %H:%M") if r.started_at else "" }}</td>
+                        <td>{{ r.finished_at.strftime("%d.%m.%Y %H:%M") if r.finished_at else "" }}</td>
+                        <td>{{ r.triggered_by or "" }}</td>
+                        <td>{{ r.error_message or "" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

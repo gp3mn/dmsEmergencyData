@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Ersatzfahrzeuge – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Ersatzfahrzeug-Belegungen</h1>
+
+    <form class="suchformular card" method="get">
+        <div class="feld">
+            <label for="q">Fahrzeug, Kennzeichen oder Auftragsnr.</label>
+            <input type="text" id="q" name="q" value="{{ q }}" autofocus>
+        </div>
+        <div class="feld">
+            <button type="submit">Suchen</button>
+        </div>
+    </form>
+
+    {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Fahrzeug</th>
+                    <th>Kategorie</th>
+                    <th>Kennzeichen</th>
+                    <th>Gueltig von</th>
+                    <th>Gueltig bis</th>
+                    <th>Nicht verfuegbar</th>
+                    <th>Fixierung</th>
+                    <th>Auftrag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in results %}
+                    <tr>
+                        <td>{{ f.mobilitaetbez or "" }}{% if f.fzgkennung %} ({{ f.fzgkennung }}){% endif %}</td>
+                        <td>{{ f.ersatzfzgkategorie or "" }}</td>
+                        <td>{{ f.amtlkz or "" }}</td>
+                        <td>{{ f.gueltigab.strftime("%d.%m.%Y %H:%M") if f.gueltigab else "" }}</td>
+                        <td>{{ f.gueltigbis.strftime("%d.%m.%Y %H:%M") if f.gueltigbis else "" }}</td>
+                        <td>{{ f.nichtverfuegbarkeit or "" }}</td>
+                        <td>{{ f.fixierung or "" }}</td>
+                        <td>
+                            {% if f.auftragsnr %}
+                                {% if f.auftrag_vorhanden %}
+                                    <a href="{{ url_for('auftrag.detail', auftragsnr=f.auftragsnr) }}">{{ f.auftragsnr }}</a>
+                                {% else %}
+                                    {{ f.auftragsnr }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="leer-hinweis">
+            {% if q %}Keine Ersatzfahrzeug-Belegungen gefunden.{% else %}Keine Ersatzfahrzeug-Belegungen fuer diesen Betrieb vorhanden.{% endif %}
+        </p>
+    {% endif %}
+{% endblock %}

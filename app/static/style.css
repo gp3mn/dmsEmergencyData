@@ -1,0 +1,243 @@
+:root {
+    --color-bg: #f4f5f7;
+    --color-surface: #ffffff;
+    --color-text: #1f2933;
+    --color-muted: #5f6b7a;
+    --color-border: #d7dbe0;
+    --color-accent: #1b5e8c;
+    --color-accent-text: #ffffff;
+    --color-danger: #a4222d;
+    --color-danger-bg: #fbeaec;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.4;
+}
+
+header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+nav .brand {
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    margin-right: auto;
+}
+
+nav a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+nav .betrieb-info {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+}
+
+h1 {
+    font-size: 1.4rem;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.25rem;
+}
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+form.suchformular {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    align-items: end;
+}
+
+form.suchformular .feld {
+    margin-bottom: 0;
+}
+
+.feld {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.aktionen {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+label {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+}
+
+input[type="text"],
+input[type="date"],
+input[type="password"] {
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    min-width: 12ch;
+}
+
+button,
+.button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button.secondary,
+.button.secondary {
+    background: var(--color-surface);
+    color: var(--color-accent);
+}
+
+button:hover,
+.button:hover {
+    opacity: 0.9;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.75rem;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.95rem;
+}
+
+th {
+    color: var(--color-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+tr:hover td {
+    background: #eef2f6;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.status-success {
+    background: #e4f4e6;
+    color: #1c6b2a;
+}
+
+.status-failed {
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+}
+
+.status-running,
+.status-skipped_superseded {
+    background: #fff3d6;
+    color: #8a5a00;
+}
+
+.error-box {
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.leer-hinweis {
+    color: var(--color-muted);
+    font-style: italic;
+}
+
+.login-page {
+    max-width: 360px;
+    margin: 4rem auto;
+    padding: 0 1rem;
+}
+
+.login-page .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .card {
+        border: none;
+        padding: 0;
+    }
+
+    main {
+        max-width: none;
+        padding: 0;
+    }
+}

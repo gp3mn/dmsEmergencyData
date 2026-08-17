@@ -1,0 +1,19 @@
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Notfall-Importe (Rohdaten, nicht versionieren)
+import/*.zip
+import/*.zip.failed
+import/processed/
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

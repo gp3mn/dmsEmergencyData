@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Passwort zuruecksetzen – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Passwort zuruecksetzen: {{ zielbenutzer.benutzername }}</h1>
+
+    <form method="post" class="card">
+        {% if error %}
+            <div class="error-box">{{ error }}</div>
+        {% endif %}
+        <div class="feld">
+            <label for="passwort">Neues Passwort</label>
+            <input type="password" id="passwort" name="passwort" required autofocus>
+        </div>
+        <div class="aktionen">
+            <button type="submit">Speichern</button>
+            <a class="button secondary" href="{{ url_for('benutzer.liste') }}">Abbrechen</a>
+        </div>
+    </form>
+{% endblock %}

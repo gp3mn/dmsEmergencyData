@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Benutzerverwaltung – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Benutzerverwaltung
+        <a class="button secondary no-print" href="{{ url_for('benutzer.neu') }}">Neuer Benutzer</a>
+    </h1>
+
+    {% if not benutzer %}
+        <p class="leer-hinweis">Noch keine Benutzer angelegt.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Benutzername</th>
+                    <th>Rolle</th>
+                    <th>Betrieb</th>
+                    <th>Erstellt am</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in benutzer %}
+                    <tr>
+                        <td>{{ b.benutzername }}</td>
+                        <td>{{ b.rolle }}</td>
+                        <td>{{ b.betrieb or "–" }}</td>
+                        <td>{{ b.erstellt_am.strftime("%d.%m.%Y %H:%M") if b.erstellt_am else "" }}</td>
+                        <td>
+                            <a class="button secondary" href="{{ url_for('benutzer.passwort', benutzer_id=b.id) }}">Passwort</a>
+                            <form method="post" action="{{ url_for('benutzer.loeschen', benutzer_id=b.id) }}" style="display:inline">
+                                <button type="submit" class="secondary">Loeschen</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

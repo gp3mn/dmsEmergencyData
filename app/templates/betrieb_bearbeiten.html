@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Betrieb {{ betrieb.betriebsnummer }} bearbeiten – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Betrieb {{ betrieb.betriebsnummer }} bearbeiten</h1>
+    <p class="leer-hinweis">
+        Diese Angaben liefert der Notfall-Export nicht, werden aber fuer den Ausdruck
+        eines Auftrages (Abschnitt "Auftrag an") benoetigt. Firmenname ist die
+        rechtliche Unternehmensbezeichnung (z.B. der Konzern-/Mandantenname),
+        Standortbezeichnung die konkrete Filiale/Marke an diesem Betrieb.
+    </p>
+
+    <form method="post" class="card">
+        <div class="feld">
+            <label for="firmenname">Firmenname</label>
+            <input type="text" id="firmenname" name="firmenname" value="{{ betrieb.firmenname or '' }}" placeholder="z.B. Muster Vertriebs-GmbH">
+        </div>
+        <div class="feld">
+            <label for="name">Standortbezeichnung</label>
+            <input type="text" id="name" name="name" value="{{ betrieb.name or '' }}" placeholder="z.B. Autohaus Musterstadt">
+        </div>
+        <div class="feld">
+            <label for="strasse">Strasse</label>
+            <input type="text" id="strasse" name="strasse" value="{{ betrieb.strasse or '' }}" placeholder="z.B. Musterstr. 1">
+        </div>
+        <div class="feld">
+            <label for="plz_ort">PLZ / Ort</label>
+            <input type="text" id="plz_ort" name="plz_ort" value="{{ betrieb.plz_ort or '' }}" placeholder="z.B. 12345 Musterstadt">
+        </div>
+        <div class="feld">
+            <label for="telefon">Telefon</label>
+            <input type="text" id="telefon" name="telefon" value="{{ betrieb.telefon or '' }}" placeholder="z.B. +49 30 1234567">
+        </div>
+        <div class="aktionen">
+            <button type="submit">Speichern</button>
+            <a class="button secondary" href="{{ url_for('betrieb.auswahl') }}">Abbrechen</a>
+        </div>
+    </form>
+{% endblock %}

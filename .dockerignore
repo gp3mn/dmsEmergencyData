@@ -1,0 +1,12 @@
+.git/
+.env
+.env.example
+*.md
+__pycache__/
+*.pyc
+.venv/
+venv/
+import/
+.vscode/
+.idea/
+.DS_Store

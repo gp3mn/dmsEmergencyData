@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Suche – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Auftragssuche</h1>
+
+    <div class="card">
+        <p>
+            Datenstand:
+            {% if betrieb_info and betrieb_info.letzter_datenstand %}
+                {{ betrieb_info.letzter_datenstand.strftime("%d.%m.%Y") }}
+                (Import {{ betrieb_info.letzter_import_at.strftime("%d.%m.%Y %H:%M") }})
+            {% else %}
+                <span class="leer-hinweis">noch kein Import fuer diesen Betrieb</span>
+            {% endif %}
+            &nbsp;&middot;&nbsp;
+            <a href="{{ url_for('admin.status') }}">Import-Status</a>
+        </p>
+    </div>
+
+    <form class="suchformular card" method="get">
+        <div class="feld">
+            <label for="auftragsnr">Auftragsnr.</label>
+            <input type="text" id="auftragsnr" name="auftragsnr" value="{{ form.auftragsnr }}">
+        </div>
+        <div class="feld">
+            <label for="kundenname">Kundenname</label>
+            <input type="text" id="kundenname" name="kundenname" value="{{ form.kundenname }}">
+        </div>
+        <div class="feld">
+            <label for="amtlkz">Kennzeichen</label>
+            <input type="text" id="amtlkz" name="amtlkz" value="{{ form.amtlkz }}">
+        </div>
+        <div class="feld">
+            <label for="fgstnr">Fahrgestellnr.</label>
+            <input type="text" id="fgstnr" name="fgstnr" value="{{ form.fgstnr }}">
+        </div>
+        <div class="feld">
+            <label for="von">Annahme von</label>
+            <input type="date" id="von" name="von" value="{{ form.von }}">
+        </div>
+        <div class="feld">
+            <label for="bis">Annahme bis</label>
+            <input type="date" id="bis" name="bis" value="{{ form.bis }}">
+        </div>
+        <div class="feld">
+            <button type="submit">Suchen</button>
+        </div>
+    </form>
+
+    {% if hat_suche %}
+        {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Auftragsnr.</th>
+                        <th>Kunde</th>
+                        <th>Kennzeichen</th>
+                        <th>Fahrzeug</th>
+                        <th>Annahme</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                        <tr>
+                            <td><a href="{{ url_for('auftrag.detail', auftragsnr=r.auftragsnr) }}">{{ r.auftragsnr }}</a></td>
+                            <td>{{ r.kundenname or "" }}</td>
+                            <td>{{ r.amtlkz or "" }}</td>
+                            <td>{{ r.fahrzeugmodell or "" }}</td>
+                            <td>{{ r.annahmedatum.strftime("%d.%m.%Y") if r.annahmedatum else "" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="leer-hinweis">Keine Auftraege gefunden.</p>
+        {% endif %}
+    {% else %}
+        <p class="leer-hinweis">Mindestens ein Suchfeld ausfuellen, um Auftraege zu finden.</p>
+    {% endif %}
+{% endblock %}

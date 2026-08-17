@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: notfall
+      POSTGRES_USER: notfall
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notfall -d notfall"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    # APP_USERNAME/APP_PASSWORD_HASH/SECRET_KEY/IMPORT_SCAN_INTERVAL_SECONDS kommen
+    # unveraendert aus .env -- ueber env_file, NICHT ueber ${...}-Interpolation im
+    # environment-Block, da Compose "$" darin sonst als (unbekannte) Variablen-
+    # referenz interpretiert und den Passwort-Hash an jedem "$" abschneiden wuerde.
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://notfall:${POSTGRES_PASSWORD}@db:5432/notfall
+    volumes:
+      - ./import:/app/import
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/login')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_data:

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Teilebestand – Notfall-Datenportal{% endblock %}
+{% block content %}
+    <h1>Teilebestand</h1>
+
+    <form class="suchformular card" method="get">
+        <div class="feld">
+            <label for="q">Teilenummer oder Bezeichnung</label>
+            <input type="text" id="q" name="q" value="{{ q }}" autofocus>
+        </div>
+        <div class="feld">
+            <label for="alle_betriebe">&nbsp;</label>
+            <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.95rem; color:inherit">
+                <input type="checkbox" id="alle_betriebe" name="alle_betriebe" value="1" {% if alle_betriebe %}checked{% endif %}>
+                Alle Niederlassungen durchsuchen
+            </label>
+        </div>
+        <div class="feld">
+            <button type="submit">Suchen</button>
+        </div>
+    </form>
+
+    {% if q %}
+        {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        {% if alle_betriebe %}<th>Niederlassung</th>{% endif %}
+                        <th>Teilenummer</th>
+                        <th>Bezeichnung</th>
+                        <th>Gesamtbestand</th>
+                        <th>Bestand (neu)</th>
+                        <th>Verkaufspreis</th>
+                        <th>Lagerort</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                        <tr>
+                            {% if alle_betriebe %}<td>{{ r.betrieb_name or r.betrieb }}</td>{% endif %}
+                            <td>{{ r.teilenummer or "" }}</td>
+                            <td>{{ r.teilebezeichnung or "" }}</td>
+                            <td>{{ r.gesamtbestandsmenge if r.gesamtbestandsmenge is not none else "" }}</td>
+                            <td>{{ r.bestandneu if r.bestandneu is not none else "" }}</td>
+                            <td>{{ r.verkaufspreis if r.verkaufspreis is not none else "" }}</td>
+                            <td>{{ r.lagerortneu or "" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="leer-hinweis">Keine Teile gefunden.</p>
+        {% endif %}
+    {% else %}
+        <p class="leer-hinweis">Suchbegriff eingeben, um im Teilebestand zu suchen.</p>
+    {% endif %}
+{% endblock %}

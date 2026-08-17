@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Auftrag {{ kopf.auftragsnr }} – Notfall-Datenportal{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='print_auftrag.css') }}">
+{% endblock %}
+{% block content %}
+    <p class="no-print">
+        <a class="button secondary" href="{{ url_for('auftrag.druck', auftragsnr=kopf.auftragsnr) }}">Drucken</a>
+    </p>
+    {% include "_auftrag_dokument.html" %}
+{% endblock %}

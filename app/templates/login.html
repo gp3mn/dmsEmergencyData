@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Anmeldung – Notfall-Datenportal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="login-page">
+        <h1>Notfall-Datenportal</h1>
+        <div class="card">
+            {% if error %}
+                <div class="error-box">{{ error }}</div>
+            {% endif %}
+            <form method="post">
+                <div class="feld">
+                    <label for="username">Benutzername</label>
+                    <input type="text" id="username" name="username" autofocus required>
+                </div>
+                <div class="feld">
+                    <label for="password">Passwort</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Anmelden</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Auftrag {{ kopf.auftragsnr }} – Ausdruck</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='print_auftrag.css') }}">
+</head>
+<body data-autoprint="true">
+    <main>
+        <p class="no-print"><a href="{{ url_for('auftrag.detail', auftragsnr=kopf.auftragsnr) }}">&larr; Zurueck</a></p>
+        {% include "_auftrag_dokument.html" %}
+    </main>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
