@@ -8,6 +8,16 @@ Mandantenfähig: mehrere Betriebe/Niederlassungen werden getrennt verwaltet.
 
 Technischer Hintergrund, Architekturentscheidungen und bekannte Gotchas: siehe `ARCHITECTURE.md`.
 
+## Screenshots (mit Beispieldaten)
+
+| | |
+|---|---|
+| ![Login](./screenshots/01_Login.png) Login | ![Betriebsauswahl](./screenshots/02_Betriebsauswahl.png) Betriebsauswahl |
+| ![Auftragssuche](./screenshots/03_Auftragssuche.png) Auftragssuche | ![Auftragsanzeige](./screenshots/04_Auftragsanzeige.png) Auftragsanzeige |
+| ![Druckdialog](./screenshots/05_Druckdialog.png) Druckdialog | ![Teilebestand](./screenshots/06_Teilebestand.png) Teilebestand |
+| ![Einlagerungen](./screenshots/07_Raedereinlagerungen.png) Rädereinlagerungen | ![Ersatzfahrzeuge](./screenshots/08_Ersatzfahrzeuge.png) Ersatzfahrzeuge |
+| ![Benutzerverwaltung](./screenshots/09_Benutzerverwaltung.png) Benutzerverwaltung | |
+
 ## Voraussetzungen
 
 - Docker und Docker Compose (`docker compose version`)
